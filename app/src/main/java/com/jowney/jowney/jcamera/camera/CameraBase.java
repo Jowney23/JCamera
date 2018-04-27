@@ -73,6 +73,9 @@ public abstract class CameraBase {
             return FAILURE;
         }
         try {
+            Camera.Parameters parameters = mCamera.getParameters();
+            parameters.setPreviewSize(640,480);
+            mCamera.setParameters(parameters);
             mCamera.setPreviewTexture(surfaceTexture);
             mCamera.startPreview();
             return SUCCESS;
