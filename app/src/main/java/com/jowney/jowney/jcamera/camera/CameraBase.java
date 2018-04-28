@@ -51,7 +51,7 @@ public abstract class CameraBase {
     /**
      * 摄像头打开后，可以切换摄像头
      */
-    public void switchCamera(SurfaceTexture surfaceTexture) {
+    public void switchCamera() {
 
         if (mCameraId == Camera.CameraInfo.CAMERA_FACING_BACK) {
             startCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
@@ -92,12 +92,13 @@ public abstract class CameraBase {
 
 
     public void frameCallBack(final FrameCallBack frameCallBack) {
-        mCamera.setPreviewCallback(new Camera.PreviewCallback() {
-            @Override
-            public void onPreviewFrame(byte[] bytes, Camera camera) {
-                frameCallBack.callBack(bytes);
-            }
-        });
+                mCamera.setPreviewCallback(new Camera.PreviewCallback() {
+                    @Override
+                    public void onPreviewFrame(byte[] bytes, Camera camera) {
+                        frameCallBack.callBack(bytes);
+
+                    }
+                });
     }
 
 
@@ -108,7 +109,7 @@ public abstract class CameraBase {
         if (mCamera == null)
             return FAILURE;
         try {
-            mCamera.setPreviewDisplay(null);
+            mCamera.setPreviewTexture(null);
             mCamera.setPreviewCallback(null);
             mCamera.stopPreview();
             return SUCCESS;

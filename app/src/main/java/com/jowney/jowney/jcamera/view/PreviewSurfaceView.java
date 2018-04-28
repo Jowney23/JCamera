@@ -35,6 +35,14 @@ public class PreviewSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         matrix.postScale(2,2);
         matrix.postRotate(90);
         matrix.postTranslate(1400,0);
+        new Thread(this).start();
+        CameraHelper.getInstance().startCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
+        CameraHelper.getInstance().frameCallBack(new CameraBase.FrameCallBack() {
+            @Override
+            public void callBack(byte[] bytes) {
+                VideoFrameModel.getInstance().setVideoFramebytes(bytes);
+            }
+        });
 
     }
 
@@ -44,14 +52,8 @@ public class PreviewSurfaceView extends SurfaceView implements SurfaceHolder.Cal
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        CameraHelper.getInstance().startCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
-        CameraHelper.getInstance().frameCallBack(new CameraBase.FrameCallBack() {
-            @Override
-            public void callBack(byte[] bytes) {
-                VideoFrameModel.getInstance().setVideoFramebytes(bytes);
-            }
-        });
-        new Thread(this).start();
+
+
     }
 
     @Override
@@ -61,7 +63,7 @@ public class PreviewSurfaceView extends SurfaceView implements SurfaceHolder.Cal
 
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-
+        CameraHelper.getInstance().stopCamera();
     }
 
     @Override

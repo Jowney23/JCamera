@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="people_name">
+        <item>手动阀</item>
+        <item>胜多负少</item>
+        <item>范德萨</item>
+        <item>额外的</item>
+        <item>浮点数</item>
+        <item>官方网</item>
+        <item>官方网</item>
+        <item>官方网</item>
+        <item>手动阀</item>
+        <item>胜多负少</item>
+        <item>范德萨</item>
+        <item>额外的</item>
+        <item>浮点数</item>
+        <item>官方网</item>
+        <item>官方网</item>
+        <item>官方网</item>
+    </string-array>
+</resources>

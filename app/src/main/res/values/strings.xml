@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">JCamera</string>
+    <string name="next_screen_title">下一屏选项</string>
+    <string name="next_screen_summary">下一屏</string>
+    <string name="checkbox_summary">我很帅</string>
+    <string name="checkbox_title">我刷吗?</string>
+    <string name="category_title">我喜欢</string>
+    <string name="list_title">人名列表</string>
+    <string name="list_summary">我喜欢的人名</string>
 </resources>
