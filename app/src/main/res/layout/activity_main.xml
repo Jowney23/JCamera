@@ -1,9 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<com.jowney.jowney.jcamera.view.PreviewSurfaceView
-    android:id="@+id/id_main_PreviewSurfaceView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <com.jowney.jowney.jcamera.view.PreviewSurfaceView
+        android:id="@+id/id_main_PreviewSurfaceView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:ems="1"
+
+            android:text="人证查验系统"
+
+            android:textSize="150px"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
 </LinearLayout>
