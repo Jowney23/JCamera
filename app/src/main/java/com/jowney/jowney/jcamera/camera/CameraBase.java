@@ -1,10 +1,14 @@
 package com.jowney.jowney.jcamera.camera;
 
+import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
+import com.jowney.jowney.jcamera.model.VideoFrameModel;
+
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
@@ -33,10 +37,10 @@ public abstract class CameraBase {
      * @param cameraID
      * @return
      */
-    public void startCamera(int cameraID) {
+    public void createCamera(int cameraID) {
 
         if (mCamera != null) {
-            stopCamera();
+            releaseCamera();
         }
 
         mSurfaceTexture = new SurfaceTexture(TEXTURE_NAME);
@@ -54,11 +58,13 @@ public abstract class CameraBase {
     public void switchCamera() {
 
         if (mCameraId == Camera.CameraInfo.CAMERA_FACING_BACK) {
-            startCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
+            createCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
+            return ;
         }
 
         if (mCameraId == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-            startCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
+            createCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
+
         }
     }
 
@@ -78,10 +84,16 @@ public abstract class CameraBase {
             mCamera.setParameters(parameters);
             mCamera.setPreviewTexture(surfaceTexture);
             mCamera.startPreview();
+            mCamera.setPreviewCallback(new Camera.PreviewCallback() {
+                @Override
+                public void onPreviewFrame(byte[] bytes, Camera camera) {
+                    VideoFrameModel.getInstance().setVideoFramebytes(bytes);
+                }
+            });
             return SUCCESS;
         } catch (IOException e) {
             e.printStackTrace();
-            stopCamera();
+            releaseCamera();
             return FAILURE;
         }
     }
@@ -91,27 +103,28 @@ public abstract class CameraBase {
     }
 
 
-    public void frameCallBack(final FrameCallBack frameCallBack) {
-                mCamera.setPreviewCallback(new Camera.PreviewCallback() {
-                    @Override
-                    public void onPreviewFrame(byte[] bytes, Camera camera) {
-                        frameCallBack.callBack(bytes);
 
-                    }
-                });
+    public void takePicture(){
+       mCamera.takePicture(null, null, new Camera.PictureCallback() {
+           @Override
+           public void onPictureTaken(byte[] bytes, Camera camera) {
+               Log.i(TAG, "onPictureTaken: ");
+           }
+       });
     }
 
 
     /**
      * @return 是否关闭成功
      */
-    public int stopCamera() {
+    public int releaseCamera() {
         if (mCamera == null)
             return FAILURE;
         try {
+            mCamera.stopPreview();
             mCamera.setPreviewTexture(null);
             mCamera.setPreviewCallback(null);
-            mCamera.stopPreview();
+
             return SUCCESS;
         } catch (IOException e) {
             e.printStackTrace();

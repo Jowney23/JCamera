@@ -8,8 +8,10 @@ import android.graphics.Paint;
 import android.hardware.Camera;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 import com.jowney.jowney.jcamera.camera.CameraBase;
 import com.jowney.jowney.jcamera.camera.CameraConfig;
@@ -32,17 +34,15 @@ public class PreviewSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         holder.addCallback(this);
         matrix = new Matrix();
-        matrix.postScale(2,2);
+        float a =this.getWidth()/640;
+        float b = this.getHeight()/480;
+        matrix.postScale(a,b);
+      /*  matrix.postScale(this.getWidth()/,2);
         matrix.postRotate(90);
-        matrix.postTranslate(1400,0);
+        matrix.postTranslate(1400,0);*/
         new Thread(this).start();
-        CameraHelper.getInstance().startCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
-        CameraHelper.getInstance().frameCallBack(new CameraBase.FrameCallBack() {
-            @Override
-            public void callBack(byte[] bytes) {
-                VideoFrameModel.getInstance().setVideoFramebytes(bytes);
-            }
-        });
+        CameraHelper.getInstance().createCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
+
 
     }
 
@@ -63,8 +63,9 @@ public class PreviewSurfaceView extends SurfaceView implements SurfaceHolder.Cal
 
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-        CameraHelper.getInstance().stopCamera();
+        CameraHelper.getInstance().releaseCamera();
     }
+
 
     @Override
     public void run() {
