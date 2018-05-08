@@ -46,7 +46,6 @@ public class PreviewSurfaceView extends SurfaceView implements SurfaceHolder.Cal
         //根据屏幕宽高像素对预览视频进行适当的缩放
         suitableScale = getSuitableScale();
         holder = this.getHolder();
-
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         //这个可以设置SurfaceVew的大小（设置SurfaceView与预览视频的大小一样）
         holder.setFixedSize(640 * (int) suitableScale, 480 * (int) suitableScale);
@@ -60,12 +59,12 @@ public class PreviewSurfaceView extends SurfaceView implements SurfaceHolder.Cal
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        Log.i(TAG, "surfaceCreated: ");
-        stopThread = false;
         thread = new Thread(this);
         thread.start();
-        CameraHelper.getInstance().createCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
+        stopThread = false;
 
+
+        CameraHelper.getInstance().createCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
 
     }
 
@@ -79,14 +78,16 @@ public class PreviewSurfaceView extends SurfaceView implements SurfaceHolder.Cal
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
         CameraHelper.getInstance().releaseCamera();
+        stopThread=true;
 
     }
 
 
     @Override
     public void run() {
-        while (true) {
+        while (!stopThread) {
             try {
+                Log.i(TAG, "run:我是线程 "+ Thread.currentThread().getName());
                 Bitmap videoBitmap = VideoFrameModel.getInstance().getVideoFrameBitmap(640, 480);
                 if (videoBitmap == null) continue;
                 canvas = holder.lockCanvas();
@@ -95,15 +96,9 @@ public class PreviewSurfaceView extends SurfaceView implements SurfaceHolder.Cal
 
                 canvas.drawBitmap(videoBitmap, matrix, new Paint());
 
-                Thread.sleep(1);//用于线程中断
             } catch (Exception e) {
+
                 e.printStackTrace();
-
-                Log.i(TAG, "run: " + "我被中断了888888888888888888");
-                canvas.drawColor(getResources().getColor(R.color.colorBlack));
-
-                Log.i(TAG, "run: " + "我被中断了888888888888888888" + thread.isInterrupted());
-                return;
             } finally {
                 if (canvas != null) {
                     holder.unlockCanvasAndPost(canvas);
