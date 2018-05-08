@@ -87,7 +87,7 @@ public abstract class CameraBase {
             mCamera.setPreviewCallback(new Camera.PreviewCallback() {
                 @Override
                 public void onPreviewFrame(byte[] bytes, Camera camera) {
-                    VideoFrameModel.getInstance().setVideoFramebytes(bytes);
+                    VideoFrameModel.getInstance().setVideoFrameBytes(bytes);
                 }
             });
             return SUCCESS;
@@ -118,24 +118,23 @@ public abstract class CameraBase {
      * @return 是否关闭成功
      */
     public int releaseCamera() {
-        if (mCamera == null)
-            return FAILURE;
         try {
             mCamera.stopPreview();
             mCamera.setPreviewTexture(null);
             mCamera.setPreviewCallback(null);
-
             return SUCCESS;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return FAILURE;
         } finally {
-            mCamera.release();
+            if(mCamera!=null){
+                mCamera.release();
+                mCamera = null;
+            }
             if (mSurfaceTexture != null) {
                 mSurfaceTexture.release();
                 mSurfaceTexture = null;
             }
-            mCamera = null;
             mCameraId = -1;
         }
     }

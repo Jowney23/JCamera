@@ -13,6 +13,7 @@ import com.jowney.jowney.jcamera.utile.BitMapUtils;
 public class VideoFrameModel {
     private static VideoFrameModel videoFrameModel;
     private byte[] videoFrameData;
+
     public static VideoFrameModel getInstance() {
         if (videoFrameModel == null) {
             synchronized (VideoFrameModel.class) {
@@ -27,12 +28,15 @@ public class VideoFrameModel {
     public synchronized byte[] getVideoFramebytes() {
         return videoFrameData;
     }
-    public synchronized Bitmap getVideoFrameBitmap(int w,int h){
 
-        return  BitMapUtils.rawByteArray2RGBABitmap2(videoFrameData,w,h);
+    public synchronized Bitmap getVideoFrameBitmap(int w, int h) {
+        if (videoFrameData == null){
+            return null;
+        }
+        return BitMapUtils.rawByteArray2RGBABitmap2(videoFrameData, w, h);
     }
 
-    public synchronized void setVideoFramebytes(byte[] videoFrameData) {
+    public synchronized void setVideoFrameBytes(byte[] videoFrameData) {
         this.videoFrameData = videoFrameData;
     }
 }

@@ -16,6 +16,7 @@ import com.jowney.jowney.jcamera.view.PreviewSurfaceView;
 
 public class MainActivity extends Activity {
     PreviewSurfaceView previewSurfaceView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +35,7 @@ public class MainActivity extends Activity {
         getFragmentManager().beginTransaction().replace(R.id.line1,settingFragmen).commit();*/
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -43,5 +45,17 @@ public class MainActivity extends Activity {
     protected void onPause() {
         super.onPause();
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+     //   previewSurfaceView.surfaceDestroyed(previewSurfaceView.holder);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }
