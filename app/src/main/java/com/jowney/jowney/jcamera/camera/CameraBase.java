@@ -3,6 +3,7 @@ package com.jowney.jowney.jcamera.camera;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
@@ -53,6 +54,31 @@ public abstract class CameraBase {
     }
 
     /**
+     * 打开摄像头摄像头
+     *
+     * @param cameraID
+     * @return
+     */
+    public void createCamera(int cameraID,@Nullable SurfaceTexture surfaceTexture) {
+
+        if (mCamera != null) {
+            releaseCamera();
+        }
+        if (surfaceTexture == null){
+            mSurfaceTexture = new SurfaceTexture(TEXTURE_NAME);
+        }else {
+            mSurfaceTexture = surfaceTexture;
+        }
+
+        mCamera = Camera.open(cameraID);
+        mCameraId = cameraID;
+        if (startPreview(mSurfaceTexture) != SUCCESS) {
+            Log.i(TAG, "startCamera:  开启预览失败！！！！");
+        }
+
+    }
+
+    /**
      * 摄像头打开后，可以切换摄像头
      */
     public void switchCamera() {
@@ -64,6 +90,23 @@ public abstract class CameraBase {
 
         if (mCameraId == Camera.CameraInfo.CAMERA_FACING_FRONT) {
             createCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
+
+        }
+    }
+
+
+    /**
+     * 摄像头打开后，可以切换摄像头
+     */
+    public void switchCamera(SurfaceTexture surfaceTexture) {
+
+        if (mCameraId == Camera.CameraInfo.CAMERA_FACING_BACK) {
+            createCamera(Camera.CameraInfo.CAMERA_FACING_FRONT,surfaceTexture);
+            return ;
+        }
+
+        if (mCameraId == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            createCamera(Camera.CameraInfo.CAMERA_FACING_BACK,surfaceTexture);
 
         }
     }
@@ -81,6 +124,7 @@ public abstract class CameraBase {
         try {
             Camera.Parameters parameters = mCamera.getParameters();
             parameters.setPreviewSize(640,480);
+            mCamera.setDisplayOrientation(90);
             mCamera.setParameters(parameters);
             mCamera.setPreviewTexture(surfaceTexture);
             mCamera.startPreview();
@@ -88,6 +132,7 @@ public abstract class CameraBase {
                 @Override
                 public void onPreviewFrame(byte[] bytes, Camera camera) {
                     VideoFrameModel.getInstance().setVideoFrameBytes(bytes);
+                    Log.i(TAG, "onPreviewFrame: ))))))))))");
                 }
             });
             return SUCCESS;

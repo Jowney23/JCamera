@@ -5,13 +5,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 /**
- * Created by Jowney on 2018/5/8.
+ * Creator: Jowney  (~._.~)
+ * Date: 2018/5/10/0:14
+ * Description:
  */
 
 public class TestActivity extends Activity {
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 }
